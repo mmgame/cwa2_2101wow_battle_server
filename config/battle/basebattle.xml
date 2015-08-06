@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="simuiationConstant" class="com.cwa.simuiationimpl.constant.SimuiationConstant" >
+		<property name="dimensions" value="${battle.dimensions}" />
+		<property name="clientFrameCount" value="${battle.clientFrameCount}" />
+		<property name="systemUpdateTime" value="${battle.systemUpdateTime}" />
+	</bean>
+	
+	<!-- filter -->
+	<bean id="enterSFightingPTaskFilter" class="com.cwa.battleimpl.filer.EnterSFightingPTaskFilter" />
+	<bean id="enterSFightingTaskFilter" class="com.cwa.battleimpl.filer.EnterSFightingTaskFilter" />
+	<bean id="enterSPostwarPTaskFilter" class="com.cwa.battleimpl.filer.EnterSPostwarPTaskFilter" />
+	<bean id="enterSPostwarTaskFilter" class="com.cwa.battleimpl.filer.EnterSPostwarTaskFilter" />
+	<bean id="startSimuiationFilter" class="com.cwa.battleimpl.filer.StartSimuiationFilter" >
+	</bean>
+	<bean id="initPrototypeTaskFilter" class="com.cwa.battleimpl.filer.InitPrototypeTaskFilter">
+		<property name="gloabalContext" ref="serverService" />
+	</bean>
+	<bean id="initMapTaskFilter" class="com.cwa.battleimpl.filer.InitMapTaskFilter" />
+	<bean id="initTroopTaskFilter" class="com.cwa.battleimpl.filer.InitTroopTaskFilter" />
+	<bean id="postwarFilter" class="com.cwa.battleimpl.filer.PostwarFilter" >
+	      <property name="gloabalContext" ref="serverService" />
+	</bean>
+
+
+	<!-- 战场任务管理 -->
+	<bean id="taskManager" class="com.cwa.component.task.quartz.QuartzTaskManager" />
+	<bean id="taskTypeConfigFactory" class="com.cwa.component.task.quartz.config.TaskTypeConfigFactory" />
+	<bean id="scheduleMgr" class="com.cwa.battleimpl.task.ScheduleMgr">
+		<property name="taskManager" ref="taskManager" />
+		<property name="taskTypeConfigFactory" ref="taskTypeConfigFactory" />
+	</bean>
+
+	<!-- 战场工厂map -->
+	<bean id="battleGroundFactoryMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<!-- {战场类型:战场工厂} -->
+				<entry key="1" value-ref="pvpBattleGroundFactory" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean id="moveAction" class="com.cwa.simuiationimpl.action.MoveAction" />
+	<bean id="magicAction" class="com.cwa.simuiationimpl.action.MagicAction" />
+	<bean id="idleAction" class="com.cwa.simuiationimpl.action.IdleAction" />
+	<!-- 动作map -->
+	<bean id="actionMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry key="301" value-ref="idleAction" />
+				<entry key="302" value-ref="moveAction" />
+				<entry key="303" value-ref="magicAction" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean id="actionContextFactory" class="com.cwa.simuiationimpl.manage.ActionContextFactory">
+		<property name="actionMap" ref="actionMap" />
+	</bean>
+
+	<!-- 事件转换消息 -->
+	<bean id="moveEventTransition" class="com.cwa.message.event2message.MoveEventTransition" />
+	<bean id="magicEventTransition" class="com.cwa.message.event2message.MagicEventTransition" />
+	<bean id="battleStateChangeEventTransition"	class="com.cwa.message.event2message.BattleStateChangeEventTransition" />
+	<bean id="idleEventTransition"	class="com.cwa.message.event2message.IdleEventTransition" />
+	<bean id="deadEventTransition"	class="com.cwa.message.event2message.DeadEventTransition" />
+	<bean id="trapEventTransition"	class="com.cwa.message.event2message.TrapEventTransition" />
+	<bean id="battleOverEventTransition" class="com.cwa.message.event2message.BattleOverEventTransition" />
+	
+	
+	<bean id="eventTransitionMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+			    <entry key="101" value-ref="battleOverEventTransition" />
+				<entry key="201" value-ref="moveEventTransition" />
+				<entry key="202" value-ref="magicEventTransition" />
+				<entry key="250" value-ref="battleStateChangeEventTransition" />
+				<entry key="200" value-ref="idleEventTransition" />
+				<entry key="203" value-ref="deadEventTransition" />
+				<entry key="501" value-ref="trapEventTransition" />
+			</map>
+		</constructor-arg>
+	</bean>
+	<bean id="eventTransition" class="com.cwa.message.event2message.EventTransition">
+		<property name="eventTransitionMap" ref="eventTransitionMap" />
+	</bean>
+
+	<!--技能效果处理 -->
+	<bean id="eSEffectAttackHandler" class="com.cwa.simuiationimpl.event.handler.effect.ESEffectAttackHandler" />
+	<bean id="eSEffectRecoverHandler" class="com.cwa.simuiationimpl.event.handler.effect.ESEffectRecoverHandler" />
+	<bean id="eSEffectTrapHandler" class="com.cwa.simuiationimpl.event.handler.effect.ESEffectTrapHandler" />
+	<bean id="eSEffectCallHandler" class="com.cwa.simuiationimpl.event.handler.effect.ESEffectCallHandler" />
+	<bean id="eSEffectPurgeHandler" class="com.cwa.simuiationimpl.event.handler.effect.ESEffectPurgeHandler" />
+	<bean id="eSEffectUnPurgeHandler" class="com.cwa.simuiationimpl.event.handler.effect.ESEffectUnPurgeHandler" />
+	<bean id="eSEffectDeadHandler" class="com.cwa.simuiationimpl.event.handler.effect.ESEffectDeadHandler" />
+	<bean id="eSEffectBloodHandler" class="com.cwa.simuiationimpl.event.handler.effect.ESEffectBloodHandler" />
+	<bean id="eSEffectStateHandler" class="com.cwa.simuiationimpl.event.handler.effect.ESEffectStateHandler" />
+	<!-- 效果事件处理器map -->
+	<bean id="effectHandlerMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry key="1" value-ref="eSEffectAttackHandler" />
+				<entry key="2" value-ref="eSEffectRecoverHandler" />
+				<entry key="3" value-ref="eSEffectTrapHandler" />
+				<entry key="4" value-ref="eSEffectCallHandler" />
+				<entry key="5" value-ref="eSEffectPurgeHandler" />
+				<entry key="6" value-ref="eSEffectUnPurgeHandler" />
+				<entry key="7" value-ref="eSEffectDeadHandler" />
+				<entry key="8" value-ref="eSEffectBloodHandler" />
+				<entry key="9" value-ref="eSEffectStateHandler" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<!-- buff -->
+	<bean id="canNotHurtBuff" class="com.cwa.simuiationimpl.buff.impl.CanNotHurtBuff" />
+	<bean id="curseBuff" class="com.cwa.simuiationimpl.buff.impl.CurseBuff" />
+	<bean id="deBuffResistanceBuff" class="com.cwa.simuiationimpl.buff.impl.DeBuffResistanceBuff" />
+	<bean id="giveBlueBuff" class="com.cwa.simuiationimpl.buff.impl.GiveBlueBuff" />
+	<bean id="hatredBuff" class="com.cwa.simuiationimpl.buff.impl.HatredBuff" />
+	<bean id="noMoveBuff" class="com.cwa.simuiationimpl.buff.impl.NoMoveBuff" />
+	<bean id="noSpeekBuff" class="com.cwa.simuiationimpl.buff.impl.NoSpeekBuff" />
+	<bean id="paralysisBuff" class="com.cwa.simuiationimpl.buff.impl.ParalysisBuff" />
+	<bean id="poisonBuff" class="com.cwa.simuiationimpl.buff.impl.PoisonBuff" />
+	<bean id="reflexBuff" class="com.cwa.simuiationimpl.buff.impl.ReflexBuff" />
+	<bean id="removeAllBadBuff" class="com.cwa.simuiationimpl.buff.impl.RemoveAllBadBuff" />
+	<bean id="sevenElementBuff" class="com.cwa.simuiationimpl.buff.impl.SevenElementBuff" />
+	<bean id="sevenResistanceBuff" class="com.cwa.simuiationimpl.buff.impl.SevenResistanceBuff" />
+	<bean id="sevenAttrBuff" class="com.cwa.simuiationimpl.buff.impl.SevenAttrBuff" />
+	<bean id="shieldBuff" class="com.cwa.simuiationimpl.buff.impl.ShieldBuff" />
+	<bean id="sleepBuff" class="com.cwa.simuiationimpl.buff.impl.SleepBuff" />
+	<bean id="stoneBuff" class="com.cwa.simuiationimpl.buff.impl.StoneBuff" />
+	<bean id="suckBloodBuff" class="com.cwa.simuiationimpl.buff.impl.SuckBloodBuff" />
+	<bean id="suckBlueBuff" class="com.cwa.simuiationimpl.buff.impl.SuckBlueBuff" />
+	<bean id="unmatchedBuff" class="com.cwa.simuiationimpl.buff.impl.UnmatchedBuff" />
+	<bean id="vertigoBuff" class="com.cwa.simuiationimpl.buff.impl.VertigoBuff" />
+	<bean id="bloodBuff" class="com.cwa.simuiationimpl.buff.impl.BloodBuff" />
+
+	<bean id="buffMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry key="1" value-ref="poisonBuff" />
+				<entry key="2" value-ref="paralysisBuff" />
+				<entry key="3" value-ref="vertigoBuff" />
+				<entry key="4" value-ref="sleepBuff" />
+				<entry key="5" value-ref="noSpeekBuff" />
+				<entry key="6" value-ref="curseBuff" />
+				<entry key="7" value-ref="noMoveBuff" />
+				<entry key="8" value-ref="stoneBuff" />
+				<entry key="9" value-ref="hatredBuff" />
+				<entry key="10" value-ref="sevenAttrBuff" />
+				<entry key="11" value-ref="sevenResistanceBuff" />
+				<entry key="12" value-ref="deBuffResistanceBuff" />
+				<entry key="13" value-ref="sevenElementBuff" />
+				<entry key="14" value-ref="shieldBuff" />
+				<entry key="15" value-ref="removeAllBadBuff" />
+				<entry key="16" value-ref="unmatchedBuff" />
+				<entry key="17" value-ref="reflexBuff" />
+				<entry key="18" value-ref="canNotHurtBuff" />
+				<entry key="19" value-ref="bloodBuff" />
+				<entry key="20" value-ref="giveBlueBuff" />
+				<entry key="21" value-ref="suckBloodBuff" />
+				<entry key="22" value-ref="suckBlueBuff" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+
+	<bean id="buffContextFactory" class="com.cwa.simuiationimpl.manage.BuffContextFactory">
+		<property name="buffMap" ref="buffMap" />
+	</bean>
+
+	<bean id="magicHandler" class="com.cwa.simuiationimpl.event.handler.MagicEventHandler">
+		<property name="handlerMap" ref="effectHandlerMap" />
+	</bean>
+
+	<!--陷阱处理 -->
+	<bean id="trapBloodHandler" class="com.cwa.simuiationimpl.trap.handler.TrapBloodHandler" />
+	<bean id="trapStateHandler" class="com.cwa.simuiationimpl.trap.handler.TrapStateHandler" />
+    <bean id="trapEnergyHandler" class="com.cwa.simuiationimpl.trap.handler.TrapEnergyHandler" />
+	<bean id="trapHandlerMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry key="1" value-ref="trapBloodHandler" />
+				<entry key="2" value-ref="trapEnergyHandler" />
+				<entry key="3" value-ref="trapStateHandler" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean id="trapManager" class="com.cwa.simuiationimpl.manage.TrapManager">
+		<property name="trapHanderMap" ref="trapHandlerMap" />
+	</bean>
+</beans>

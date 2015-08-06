@@ -1,0 +1,7 @@
+compiler.compileProtoFiles=true
+compiler.javaCodeGenerationEnabled=true
+compiler.protocFilePath=E\:\\a13src\\\u5F00\u6E90\u8F6F\u4EF6\\protobuf\\protoc-2.5.0-win32\\protoc.exe
+eclipse.preferences.version=1
+paths.directoryPaths=${workspace_loc\:/${project}/proto}
+paths.filesInMultipleDirectories=true
+paths.filesInOneDirectoryOnly=false

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    	
+	<bean id="playerLoginUpHandler" class="com.cwa.message.player.handler.PlayerLoginUpHandler" parent="aPlayerMessageHandler"/>
+	<bean id="playerLogoutUpHandler" class="com.cwa.message.player.handler.PlayerLogoutUpHandler" parent="aPlayerMessageHandler"/>
+	<bean id="attachBattleUpHandler" class="com.cwa.message.battle.handler.AttachBattleUpHandler" parent="aBattleMessageHandler"/>
+	<bean id="syncBattleUpHandler" class="com.cwa.message.battle.handler.SyncBattleUpHandler" parent="aBattleMessageHandler"/>
+	<bean id="magicActionUpHandler" class="com.cwa.message.battle.handler.MagicActionUpHandler" parent="aBattleMessageHandler"/>
+	<bean id="moveActionUpHandler" class="com.cwa.message.battle.handler.MoveActionUpHandler" parent="aBattleMessageHandler"/>
+	<bean id="idleActionUpHandler" class="com.cwa.message.battle.handler.IdleActionUpHandler" parent="aBattleMessageHandler"/>
+	<bean id="netDelayCheckUpHandler" class="com.cwa.message.battle.handler.NetDelayCheckUpHandler" parent="aBattleMessageHandler"/>
+	
+	<bean id="playerLoginUpMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100003" />
+		<property name="message" value="com.cwa.message.PlayerMessage$PlayerLoginUp" />
+		<property name="messageHandler" ref="playerLoginUpHandler" />
+	</bean>
+	<bean id="playerLoginDownMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100004" />
+		<property name="message" value="com.cwa.message.PlayerMessage$PlayerLoginDown" />
+	</bean>
+	<bean id="playerLogoutUpMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100005" />
+		<property name="message" value="com.cwa.message.PlayerMessage$PlayerLogoutUp" />
+		<property name="messageHandler" ref="playerLogoutUpHandler" />
+	</bean>
+	<bean id="attachBattleUpMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100101" />
+		<property name="message" value="com.cwa.message.BattleMessage$AttachBattleUp" />
+		<property name="messageHandler" ref="attachBattleUpHandler" />
+	</bean>
+	<bean id="attachBattleDownMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100102" />
+		<property name="message" value="com.cwa.message.BattleMessage$AttachBattleDown" />
+	</bean>
+	<bean id="syncBattleUpMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100103" />
+		<property name="message" value="com.cwa.message.BattleMessage$SyncBattleUp" />
+		<property name="messageHandler" ref="syncBattleUpHandler" />
+	</bean>
+	<bean id="syncBattleDownMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100104" />
+		<property name="message" value="com.cwa.message.BattleMessage$SyncBattleDown" />
+	</bean>
+	<bean id="battleStepDownMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100106" />
+		<property name="message" value="com.cwa.message.BattleMessage$BattleStepDown" />
+	</bean>
+	<bean id="magicActionUpMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100107" />
+		<property name="message" value="com.cwa.message.BattleMessage$MagicActionUp" />
+		<property name="messageHandler" ref="magicActionUpHandler" />
+	</bean>
+	<bean id="magicActionDownMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100108" />
+		<property name="message" value="com.cwa.message.BattleMessage$MagicActionDown" />
+	</bean>
+	<bean id="moveActionUpMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100109" />
+		<property name="message" value="com.cwa.message.BattleMessage$MoveActionUp" />
+		<property name="messageHandler" ref="moveActionUpHandler" />
+	</bean>
+	<bean id="moveActionDownMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100110" />
+		<property name="message" value="com.cwa.message.BattleMessage$MoveActionDown" />
+	</bean>
+	<bean id="removeDownMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100112" />
+		<property name="message" value="com.cwa.message.BattleMessage$RemoveDown" />
+	</bean>
+	<bean id="idleActionUpMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100113" />
+		<property name="message" value="com.cwa.message.BattleMessage$IdleActionUp" />
+		<property name="messageHandler" ref="idleActionUpHandler" />
+	</bean>
+	<bean id="idleActionDownMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100114" />
+		<property name="message" value="com.cwa.message.BattleMessage$IdleActionDown" />
+	</bean>
+	<bean id="netDelayCheckUpMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100115" />
+		<property name="message" value="com.cwa.message.BattleMessage$NetDelayCheckUp" />
+		<property name="messageHandler" ref="netDelayCheckUpHandler" />
+	</bean>
+	<bean id="netDelayCheckDownMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100116" />
+		<property name="message" value="com.cwa.message.BattleMessage$NetDelayCheckDown" />
+	</bean>
+	<bean id="deadDownMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100118" />
+		<property name="message" value="com.cwa.message.BattleMessage$DeadDown" />
+	</bean>
+	<bean id="trapTriggerDownMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100120" />
+		<property name="message" value="com.cwa.message.BattleMessage$TrapTriggerDown" />
+	</bean>
+	<bean id="battleOverDownMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2100122" />
+		<property name="message" value="com.cwa.message.BattleMessage$BattleOverDown" />
+	</bean>
+	<bean id="bErrorDownMessageConfig" class="com.cwa.message.MessageConfig">
+		<property name="commonId" value="2999001" />
+		<property name="message" value="com.cwa.message.BErrorMessage$BErrorDown" />
+	</bean>
+	
+	
+	<bean id="messageConfigsList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<ref bean="playerLoginUpMessageConfig" />
+				<ref bean="playerLoginDownMessageConfig" />
+				<ref bean="playerLogoutUpMessageConfig" />
+				<ref bean="attachBattleUpMessageConfig" />
+				<ref bean="attachBattleDownMessageConfig" />
+				<ref bean="syncBattleUpMessageConfig" />
+				<ref bean="syncBattleDownMessageConfig" />
+				<ref bean="battleStepDownMessageConfig" />
+				<ref bean="magicActionUpMessageConfig" />
+				<ref bean="magicActionDownMessageConfig" />
+				<ref bean="moveActionUpMessageConfig" />
+				<ref bean="moveActionDownMessageConfig" />
+				<ref bean="removeDownMessageConfig" />
+				<ref bean="idleActionUpMessageConfig" />
+				<ref bean="idleActionDownMessageConfig" />
+				<ref bean="netDelayCheckUpMessageConfig" />
+				<ref bean="netDelayCheckDownMessageConfig" />
+				<ref bean="deadDownMessageConfig" />
+				<ref bean="trapTriggerDownMessageConfig" />
+				<ref bean="battleOverDownMessageConfig" />
+				<ref bean="bErrorDownMessageConfig" />
+			</list>
+		</constructor-arg>
+	</bean>
+	<bean id="messageHandler" class="com.cwa.message.ProBuffMessageHandler">
+	    <property name="messageConfigs" ref="messageConfigsList" />
+	</bean>
+	
+	<bean id="configMessage" class="com.cwa.message.ConfigMessage">
+	    <property name="messageConfigs" ref="messageConfigsList" />
+	</bean>
+</beans>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 战前FilterList -->
+	<bean id="pvp_prewarFilterList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<!-- 1.战前初始化 -->
+				<ref bean="initPrototypeTaskFilter" />
+				<ref bean="initMapTaskFilter" />
+				<ref bean="initTroopTaskFilter" />
+				<!-- 2.进入战前准备任务 -->
+				<ref bean="enterSFightingPTaskFilter" />
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- 战前准备FilterList -->
+	<bean id="pvp_fightingPrepareFilterList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<!-- 1.战前准备其他流程 -->
+				<!-- 2.战中准备任务 -->
+				<ref bean="enterSFightingTaskFilter" />
+
+				<!-- 3.通知用户 -->
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- 战中FilterList -->
+	<bean id="pvp_fightingFilterList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<!-- 1.战中其他流程 -->
+
+				<!-- 2.启动仿真器 -->
+				<ref bean="startSimuiationFilter" />
+
+				<!-- 3.通知用户 -->
+
+				<!-- 4.等待仿真器结束回调 -->
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<!-- 战后等待FilterList -->
+	<bean id="pvp_postwarPrepareFilterList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<!-- 1.战中准备其他流程 -->
+
+				<!-- 2.通知用户 -->
+
+				<!-- 3.战后等待 -->
+				<ref bean="enterSPostwarPTaskFilter" />
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- 战后FilterList -->
+	<bean id="pvp_postwarFilterList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<!-- 1.战后其他流程（给应验，物品） -->
+                <ref bean="postwarFilter" />
+				<!-- 2.通知用户 -->
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- 战前链 -->
+	<bean id="pvp_prewarABattleChain" class="com.cwa.battle.filter.ABattleChain">
+		<constructor-arg index="0" value="prewar" />
+		<constructor-arg index="1" ref="pvp_prewarFilterList" />
+	</bean>
+	<!-- 战前准备链 -->
+	<bean id="pvp_fightingPrepareABattleChain" class="com.cwa.battle.filter.ABattleChain">
+		<constructor-arg index="0" value="fightingPrepare" />
+		<constructor-arg index="1" ref="pvp_fightingPrepareFilterList" />
+	</bean>
+	<!-- 战中链 -->
+	<bean id="pvp_fightingABattleChain" class="com.cwa.battle.filter.ABattleChain">
+		<constructor-arg index="0" value="fighting" />
+		<constructor-arg index="1" ref="pvp_fightingFilterList" />
+	</bean>
+	<!-- 战后准备链 -->
+	<bean id="pvp_postwarPrepareABattleChain" class="com.cwa.battle.filter.ABattleChain">
+		<constructor-arg index="0" value="postwarPrepare" />
+		<constructor-arg index="1" ref="pvp_postwarPrepareFilterList" />
+	</bean>
+	<!-- 战后链 -->
+	<bean id="pvp_postwarABattleChain" class="com.cwa.battle.filter.ABattleChain">
+		<constructor-arg index="0" value="postwar" />
+		<constructor-arg index="1" ref="pvp_postwarFilterList" />
+	</bean>
+
+	<!-- 战前状态 -->
+	<bean id="pvp_prewarState" class="com.cwa.battleimpl.state.GeneralState">
+		<property name="battleChain" ref="pvp_prewarABattleChain" />
+		<property name="type" value="1" />
+	</bean>
+	<!-- 战前准备状态 -->
+	<bean id="pvp_fightingPrepareState" class="com.cwa.battleimpl.state.GeneralState">
+		<property name="battleChain" ref="pvp_fightingPrepareABattleChain" />
+		<property name="type" value="2" />
+	</bean>
+	<!-- 战中状态 -->
+	<bean id="pvp_fightingState" class="com.cwa.battleimpl.state.GeneralState">
+		<property name="battleChain" ref="pvp_fightingABattleChain" />
+		<property name="type" value="3" />
+	</bean>
+	<!-- 战后准备状态 -->
+	<bean id="pvp_postwarPrepareState" class="com.cwa.battleimpl.state.GeneralState">
+		<property name="battleChain" ref="pvp_postwarPrepareABattleChain" />
+		<property name="type" value="4" />
+	</bean>
+	<!-- 战后状态 -->
+	<bean id="pvp_postwarState" class="com.cwa.battleimpl.state.GeneralState">
+		<property name="battleChain" ref="pvp_postwarABattleChain" />
+		<property name="type" value="5" />
+	</bean>
+
+	<!-- 战场工厂map -->
+	<bean id="pvp_defaultStateMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<!-- {状态类型：状态链} -->
+				<entry key="1" value-ref="pvp_prewarState" />
+				<entry key="2" value-ref="pvp_fightingPrepareState" />
+				<entry key="3" value-ref="pvp_fightingState" />
+				<entry key="4" value-ref="pvp_postwarPrepareState" />
+				<entry key="5" value-ref="pvp_postwarState" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+
+	<!-- 战场事件处理map -->
+	<bean id="pvp_eventHandlerMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry key="202" value-ref="magicHandler" />
+			</map>
+		</constructor-arg>
+	</bean>
+	<bean id="pvpSEventHandlerManager"
+		class="com.cwa.simuiationimpl.event.handler.SEventHandlerManager">
+		<property name="eventHandlerMap" ref="pvp_eventHandlerMap" />
+	</bean>
+
+	<bean id="magicActionContextHandler" class="com.cwa.simuiationimpl.action.MagicActionContextHandler" />
+	<bean id="moveActionContextHandler" class="com.cwa.simuiationimpl.action.MoveActionContextHandler" />
+	<bean id="idleActionContextHandler" class="com.cwa.simuiationimpl.action.IdleActionContextHandler" />
+
+	<!-- 动作消息处理器 -->
+	<bean id="actionContextHandlerMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry key="301" value-ref="idleActionContextHandler" />
+				<entry key="302" value-ref="moveActionContextHandler" />
+				<entry key="303" value-ref="magicActionContextHandler" />
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean id="actionContextHandler"
+		class="com.cwa.simuiationimpl.action.MessageActionContextHandler">
+		<property name="actionContextHandlerMap" ref="actionContextHandlerMap" />
+	</bean>
+	<!-- pvp战场工厂 -->
+	<bean id="pvpBattleGroundFactory" class="com.cwa.battleimpl.pvp.PvPBattleGroundFactory">
+		<property name="defaultStateMap" ref="pvp_defaultStateMap" />
+		<property name="taskTypeConfigFactory" ref="taskTypeConfigFactory" />
+		<property name="taskManager" ref="taskManager" />
+		<property name="eventHandlerManager" ref="pvpSEventHandlerManager" />
+		<property name="actionContextHandler" ref="actionContextHandler" />
+		<property name="actionContextFactory" ref="actionContextFactory" />
+		<property name="eventTransition" ref="eventTransition" />
+		<property name="trapManager" ref="trapManager" />
+		<property name="buffContextFactory" ref="buffContextFactory" />
+		
+	</bean>
+
+
+</beans>
